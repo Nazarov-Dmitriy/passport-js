@@ -21,7 +21,7 @@ const client = redis.createClient({
 
 router.get('/api/books', async (req, res) => {
     try {
-        const books = await Book.find().select('-__v') 
+        const books = await Book.find().select('-__v')
 
         res.render("books/index", {
             title: "Книги",
@@ -43,7 +43,8 @@ router.get('/api/books/:id', async (req, res) => {
         res.render("books/view", {
             title: "Книга ",
             book: books,
-            cnt
+            cnt,
+            user: req.user
         });
     } catch (e) {
         res.status(500).json(e)

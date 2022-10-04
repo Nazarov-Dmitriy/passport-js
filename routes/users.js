@@ -59,7 +59,6 @@ router.post('/api/user/login',
         failureRedirect: '/api/user/login'
     }),
     (req, res) => {
-        console.log("req.user: ", req.user)
         res.redirect('/')
     }
 )

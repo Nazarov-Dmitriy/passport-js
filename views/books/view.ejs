@@ -3,6 +3,7 @@
 
 <h1><%= title %></h1>
 
+
 <div class="row">
     <div class="col-sm-8">
         <div class="card">
@@ -21,13 +22,34 @@
                             <i class="fa fa-trash" aria-hidden="true"></i>
                         </button>
                     </form>
+                    <div> Количество просмотров <%= cnt %></div>
                 </div>
-
             </div>
-        </div>
+        </div>    
     </div>
 </div>
 
-<div> Количество просмотров <%= cnt %></div>
+
+<% if(user) { %>
+
+<div class="row">
+    <div class="col-sm-8">
+        <div class="form-group">
+            <label for="text" id="username"> <%= user.displayName %></label>
+            <textarea placeholder="message" class="form-control" id="text"></textarea>
+        </div>
+        <button type="submit" id="send-room" class="btn btn-primary">Оставить комментарий</button>
+    </div>
+</div>
+<% } else { %>
+<h5 class="mt-5">Авторизуйтесь чтобы оставить комментарий </h5>
+<% } %>
+
+<div class="row">
+    <div class="col-sm-8">
+        <div id="list" class="list-group">
+        </div>
+    </div>
+</div>
 
 <%- include('../port/layout-end') %>
