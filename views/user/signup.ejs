@@ -1,0 +1,27 @@
+<%- include('../port/layout-start') %>
+<%- include('../port/menu') %>
+
+<div class="jumbotron jumbotron-fluid">
+  <form class="w-50 mx-auto p-0 ">
+    <div class="mb-3 row">
+      <label for="exampleInputEmail1" class="form-label col-4">Логин</label>
+      <input type="text" class="form-control col-sm" id="exampleInputEmail1" name="username">
+    </div>
+    <div class=" mb-3 row">
+      <label for="exampleInputPassword1" class="form-label col-4">Пароль</label>
+      <input type="password" class="form-control col" id="exampleInputPassword1" name="password">
+    </div>
+    <div class=" mb-3 row">
+      <label for="exampleInputPassword1" class="form-label col-4">Имя</label>
+      <input type="text" class="form-control col" id="exampleInputPassword1" name="displayName">
+    </div>
+    <div class=" mb-3 row">
+      <label for="exampleInputPassword1" class="form-label col-4">Почта</label>
+      <input type="text" class="form-control col" id="exampleInputPassword1" name="emails">
+    </div>
+    <button type="submit" class="btn btn-primary " formaction='/api/user/signup'
+      formmethod="post">Зарегистрироватся</button>
+  </form>
+</div>
+
+<%- include('../port/layout-end') %>
