@@ -48,7 +48,6 @@
            value: emails
          }],
        })
-       console.log(records)
      } else {
        console.log('User ' + username + ' does not exist')
      }

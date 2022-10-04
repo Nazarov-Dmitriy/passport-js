@@ -6,47 +6,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous">
 </script>
-<script>
-        const roomName = location.pathname.split('/').pop();
-        const socket = io.connect('/', {
-                query: `roomName=${roomName}`
-        });
-
-        const boxList = document.querySelector('#list');
-        const inputUsername = document.querySelector('#username');
-        const inputText = document.querySelector('#text');
-        const sendRoom = document.querySelector('#send-room');
-
-        const getTmp = (msg) => {
-                return `
-                            <div class="list-group-item list-group-item-action">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <small>${msg.username}</small>
-                                    <small class="text-muted">${new Date().getHours()}:
-                                        ${new Date().getHours()<10 ?'0'+new Date().getHours():new Date().getHours()}:${new Date().getSeconds()<10 ?'0'+new Date().getSeconds():new Date().getSeconds()}</small>
-                                </div>
-                                <p class="mb-1">${msg.text}</p>
-                            </div>
-                    `;
-        };
-
-
-        socket.on('message-to-room', (msg) => {
-                const div = getTmp(msg)
-                boxList.insertAdjacentHTML('beforeend', div)
-        });
-
-        console.log(sendRoom);
-        console.log(inputUsername);
-
-        sendRoom.addEventListener('click', () => {
-                socket.emit('message-to-room', {
-                        username: inputUsername.textContent,
-                        text: inputText.value,
-                })
-                inputText.value = '';
-        })
-</script>
 
 </body>
 

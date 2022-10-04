@@ -44,7 +44,8 @@ router.get('/api/books/:id', async (req, res) => {
             title: "Книга ",
             book: books,
             cnt,
-            user: req.user
+            user: req.user,
+            idBook: id,
         });
     } catch (e) {
         res.status(500).json(e)
@@ -97,15 +98,16 @@ router.get('/api/books/update/:id', async (req, res) => {
 });
 
 
-router.put('/api/books/update/:id', async (req, res) => {
-
+router.post('/api/books/update/:id', fileMulter.single('fileBook'), async (req, res) => {
     const {
         title,
         description,
         authors,
         favorite,
-        tfileCover,
+        fileCover,
         fileName,
+    } = req.body
+    const {
         fileBook
     } = req.body
     const {
@@ -114,13 +116,13 @@ router.put('/api/books/update/:id', async (req, res) => {
 
     try {
         await Book.findByIdAndUpdate(id, {
-            title,
-            description,
-            authors,
-            favorite,
-            tfileCover,
-            fileName,
-            fileBook
+            title: title,
+            description: description,
+            authors: authors,
+            favorite: favorite,
+            fileCover: fileCover,
+            fileName: fileName,
+            fileBook: fileBook
         })
 
         res.redirect(`/api/books`);

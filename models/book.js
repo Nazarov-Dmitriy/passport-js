@@ -32,6 +32,10 @@ const booksShema = new Schema({
         type: String,
         default: "",
     },
+    messages: {
+        type: Array,
+        default: [],
+    },
 })
 
 module.exports = model("Book", booksShema);

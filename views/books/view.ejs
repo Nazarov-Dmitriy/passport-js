@@ -6,7 +6,7 @@
 
 <div class="row">
     <div class="col-sm-8">
-        <div class="card">
+        <div class="card" id=<%= book.id %>>
             <div class="card-body">
 
                 <h5 class="card-title"><%= book.title %></h5>
@@ -25,13 +25,12 @@
                     <div> Количество просмотров <%= cnt %></div>
                 </div>
             </div>
-        </div>    
+        </div>
     </div>
 </div>
 
 
 <% if(user) { %>
-
 <div class="row">
     <div class="col-sm-8">
         <div class="form-group">
@@ -45,11 +44,65 @@
 <h5 class="mt-5">Авторизуйтесь чтобы оставить комментарий </h5>
 <% } %>
 
+
 <div class="row">
     <div class="col-sm-8">
         <div id="list" class="list-group">
+            <% book.messages.map((el) => {  %>
+            <div class="list-group-item list-group-item-action ">
+                <div class="d-flex w-100 justify-content-between">
+                    <small><%= el.username %></small>
+                    <small class="text-muted"><%= el.date %></small>
+                </div>
+                <p class="mb-1"><%= el.text %></p>
+            </div>
+            <% }) %>
         </div>
     </div>
 </div>
+
+<script>
+    const roomName = location.pathname.split('/').pop();
+    const socket = io.connect('/', {
+        query: `roomName=${roomName}`
+    });
+
+    const boxList = document.querySelector('#list');
+    const inputUsername = document.querySelector('#username');
+    const inputText = document.querySelector('#text');
+    const sendRoom = document.querySelector('#send-room');
+    const bookId = document.querySelector('.card').getAttribute('id');
+    const date =
+        `${new Date().getHours()}:${new Date().getHours()<10 ?'0'+new Date().getHours():new Date().getHours()}:${new Date().getSeconds()<10 ?'0'+new Date().getSeconds():new Date().getSeconds()}`
+
+    const getTmp = (msg) => {
+        return `
+                        <div class="list-group-item list-group-item-action ">
+                            <div class="d-flex w-100 justify-content-between">
+                                <small>${msg.username}</small>
+                                <small class="text-muted">${msg.date}</small>
+                            </div>
+                            <p class="mb-1">${msg.text}</p>
+                        </div>
+                `;
+    };
+
+    socket.on('message-to-room', (msg) => {
+        const div = getTmp(msg)
+        boxList.insertAdjacentHTML('beforeend', div)
+    });
+
+    if (sendRoom) {
+        sendRoom.addEventListener('click', () => {
+            socket.emit('message-to-room', {
+                username: inputUsername.textContent,
+                text: inputText.value,
+                bookId,
+                date
+            })
+            inputText.value = '';
+        })
+    }
+</script>
 
 <%- include('../port/layout-end') %>

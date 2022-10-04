@@ -12,6 +12,8 @@ const app = express()
 const UrlDB = process.env.ME_CONFIG_MONGODB_URL
 const DATABESE = process.env.ME_CONFIG_MONGODB_DATABASEE
 const PORT = process.env.PORT || 7070
+const Books = require('./models/book')
+
 
 app.use(express.urlencoded({
   extended: true
@@ -55,26 +57,34 @@ io.on('connection', (socket) => {
   const {
     id
   } = socket;
-  console.log(id);
-  console.log(`Socket connected: ${id}`);
-
-  socket.on('message-to-me', (msg) => {
-    msg.type = 'me';
-    socket.emit('message-to-me', msg);
-  });
 
   const {
     roomName
   } = socket.handshake.query;
-  console.log(`Socket roomName: ${roomName}`);
   socket.join(roomName);
-  socket.on('message-to-room', (msg) => {
-    msg.type = `room: ${roomName}`;
-    socket.to(roomName).emit('message-to-room', msg);
-    socket.emit('message-to-room', msg);
+
+  socket.on('message-to-room',async(msg) => {
+    try {
+      const book = await Books.findById(msg.bookId);
+      console.log(book);
+      if (book) {
+        book.messages.push(msg);
+        book.save();
+        socket.to(roomName).emit('message-to-room', msg);
+          socket.emit('message-to-room', msg);
+      } else {
+        socket.emit('error', {
+          message: 'Error update book',
+        });
+      }
+    } catch (e) {
+      socket.emit('error', {
+        message: 'Error update book',
+      });
+    }
   });
 
-  // socket.on('disconnect', () => {
-  //   console.log(`Socket disconnected: ${id}`);
-  // });
+  socket.on('disconnect', () => {
+    console.log(`Socket disconnected: ${id}`);
+  });
 });
